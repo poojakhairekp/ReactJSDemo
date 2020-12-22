@@ -81,7 +81,14 @@ namespace OnboardingTask.Controllers
         public async Task<ActionResult<Store>> PostStore(Store store)
         {
             var id = _context.Store.Max(stores => stores.Id);
-            store.Id = id + 1;
+            if (id !=0)
+            {
+                store.Id = id + 1;
+            }
+            else
+            {
+                store.Id = 1;
+            }
             _context.Store.Add(store);
             await _context.SaveChangesAsync();
 
@@ -92,12 +99,17 @@ namespace OnboardingTask.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<Store>> DeleteStore(int id)
         {
+            var sales = _context.Sales.Where(s => s.StoreId == id).FirstOrDefault();
             var store = await _context.Store.FindAsync(id);
             if (store == null)
             {
                 return NotFound();
             }
-
+            if (sales != null)
+            {
+                _context.Sales.Remove(sales);
+                _context.SaveChanges();
+            }
             _context.Store.Remove(store);
             await _context.SaveChangesAsync();
 

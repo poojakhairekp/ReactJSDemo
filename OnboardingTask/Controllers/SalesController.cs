@@ -82,7 +82,6 @@ namespace OnboardingTask.Controllers
         {
             var id = _context.Sales.Max(sale => sale.Id);
             sales.Id = id + 1;
-            sales.DateSold = DateTime.UtcNow;
             _context.Sales.Add(sales);
             await _context.SaveChangesAsync();
 

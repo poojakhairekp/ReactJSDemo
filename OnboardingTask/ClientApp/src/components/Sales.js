@@ -27,14 +27,16 @@ export class SalesList extends Component {
             ProductId: "",
             StoreId: "",
             id: "",
-            DateSold:"",
+            DateSold: "",
             customernameisvalid: false,
             productnameisvalid: false,
             storenameisvalid: false,
+            datesoldisvalid:"",
             customernameErrors: "",
             productnameErrors: "",
             storenameErrors: "",
-            isModalOpen: false
+            isModalOpen: false,
+            datesoldErrors:""
         };
         this.openModal = this.openModal.bind(this);
         this.closeModal = this.closeModal.bind(this);
@@ -73,7 +75,7 @@ export class SalesList extends Component {
     }
 
     closeModal() {
-        this.setState({ isModalOpen: false })
+        this.setState({ CustomerId: "", ProductId: "", StoreId: "", isModalOpen: false });
     }
 
     onCustomerChange = (e) => {
@@ -93,9 +95,16 @@ export class SalesList extends Component {
 
     }
 
+    onDateChange = (e) => {
+        this.setState({ DateSold: e.target.value });
+        console.log(e.target.value)
+
+    }
+
     handleEdit(data) {
+        console.log(data.dateSold);
         this.setState({
-            id: data.id, CustomerId: data.customerId, ProductId: data.productId, StoreId: data.storeId, isModalOpen: true,DateSold:data.dateSold
+            id: data.id, CustomerId: data.customerId, ProductId: data.productId, StoreId: data.storeId, isModalOpen: true, DateSold: data.dateSold
         });
     }
 
@@ -124,7 +133,8 @@ export class SalesList extends Component {
             body: JSON.stringify({
                 CustomerId: parseInt(this.state.CustomerId),
                 ProductId: parseInt(this.state.ProductId),
-                StoreId:parseInt(this.state.StoreId)
+                StoreId: parseInt(this.state.StoreId),
+                DateSold: this.state.DateSold
             })
         }
 
@@ -155,6 +165,12 @@ export class SalesList extends Component {
         else {
             this.setState({ productnameisvalid: true, productnameErrors: "" });
         }
+        if ((this.state.DateSold) == "") {
+            this.setState({ datesoldisvalid: false, datesoldErrors: "Select date" });
+        }
+        else {
+            this.setState({ datesoldisvalid: true, datesoldErrors: "" });
+        }
     }
 
     render() {
@@ -168,6 +184,7 @@ export class SalesList extends Component {
                             <th>Customer Id</th>
                             <th>Store Id</th>
                             <th>Products Id</th>
+                            <th>Date Sold</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -178,6 +195,7 @@ export class SalesList extends Component {
                                 <td>{data.customerId}</td>
                                 <td>{data.storeId}</td>
                                 <td>{data.productId}</td>
+                                <td>{data.dateSold}</td>
                                 <td>
                                     <button className="btn btn-warning" data-toggle="modal" data-target="#MyModal" onClick={() => this.handleEdit(data)}>Edit</button>
                                     <button className="btn btn-danger" onClick={() =>this.handleDelete(data.id)}>Delete</button>
@@ -186,7 +204,7 @@ export class SalesList extends Component {
                         )}
                     </tbody>
                 </table>
-    
+
                 <Modal isOpen={this.state.isModalOpen} style={customStyless} onClose={!this.state.isModalOpen} >
                     <form className="form-horizontal" onSubmit={this.handleSave} >
                         <div className="form-group">
@@ -223,14 +241,19 @@ export class SalesList extends Component {
                             <span style={{ color: "red" }}>{this.state.storenameErrors}</span>
                         </div>
                         <div className="form-group">
-                            <button type="submit" disabled={!(this.state.customernameisvalid && this.state.productnameisvalid && this.state.storenameisvalid)} className="btn btn-primary">Save</button>
+                            <label htmlFor="DateSold">Date Sold</label>
+                            <input type="datetime-local" value={this.state.DateSold} name="DateSold" id="DateSold" className="form-control" onFocus={this.isFormValid.bind(this)} onChange={this.onDateChange} />
+                            <span style={{ color: "red" }}>{this.state.datesoldErrors}</span>
+                        </div>
+                        <div className="form-group">
+                            <button type="submit" disabled={!(this.state.customernameisvalid && this.state.productnameisvalid && this.state.storenameisvalid && this.state.datesoldisvalid)} className="btn btn-primary">Save</button>
                         </div>
                     </form>
-                    <button className="btn btn-danger" onClick={this.CloseModal} data-dismiss="modal">Close</button>
+                    <button className="btn btn-danger" onClick={this.closeModal}>Close</button>
 
-                            </Modal>
+                </Modal>
                                 
-                        </div>
+            </div>
                     
         );
     }

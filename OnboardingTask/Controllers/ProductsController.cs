@@ -92,12 +92,17 @@ namespace OnboardingTask.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<Product>> DeleteProduct(int id)
         {
+            var sales = _context.Sales.Where(s => s.ProductId == id).FirstOrDefault();
             var product = await _context.Product.FindAsync(id);
             if (product == null)
             {
                 return NotFound();
             }
-
+            if (sales != null)
+            {
+                _context.Sales.Remove(sales);
+                _context.SaveChanges();
+            }
             _context.Product.Remove(product);
             await _context.SaveChangesAsync();
 

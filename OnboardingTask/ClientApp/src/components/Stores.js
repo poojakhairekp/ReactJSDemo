@@ -82,7 +82,7 @@ export class StoreList extends Component {
     }
 
     closeModal() {
-        this.setState({ isModalOpen: false })
+        this.setState({ id: "", name: "", address:"", isModalOpen: false })
     }
 
     openModal() {

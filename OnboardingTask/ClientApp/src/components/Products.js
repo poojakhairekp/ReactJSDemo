@@ -84,7 +84,7 @@ export class ProductList extends Component {
 
 
     closeModal() {
-        this.setState({ isModalOpen: false })
+        this.setState({ id: "", name: "", price:"", isModalOpen: false })
     }
 
     openModal() {
