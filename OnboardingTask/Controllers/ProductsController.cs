@@ -100,8 +100,7 @@ namespace OnboardingTask.Controllers
             }
             if (sales != null)
             {
-                _context.Sales.Remove(sales);
-                _context.SaveChanges();
+                return NotFound();
             }
             _context.Product.Remove(product);
             await _context.SaveChangesAsync();
